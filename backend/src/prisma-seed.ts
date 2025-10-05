@@ -20,21 +20,21 @@ const USERS = [
 const IDEAS = [
   {
     id: '6aa8871d-6665-4e13-98db-efcecf78d28e',
-    title: 'Animal Alphabet Adventure',
+    title: 'Алфавитное Сафари',
     description:
-      'A playful learning app where children explore colorful worlds while matching letters with animals. Each letter unlocks a new animal friend with fun animations and sounds.',
+      'Весёлое обучающее приложение, где дети исследуют красочные миры, сопоставляя буквы с животными. Каждая буква открывает нового друга-животного с забавными анимациями и звуками.',
   },
   {
     id: 'a6797f99-c952-403a-9fe3-27344fc38909',
-    title: 'Counting Candy Factory',
+    title: 'Фабрика Счётных Конфет',
     description:
-      'Kids help run a magical candy factory by counting, sorting, and packaging colorful sweets. They learn basic math skills while creating delicious virtual treats.',
+      'Дети помогают управлять волшебной конфетной фабрикой, считая, сортируя и упаковывая разноцветные сладости. Они осваивают базовые математические навыки, создавая вкусные виртуальные угощения.',
   },
   {
     id: '8f5079d5-ef59-4bf5-81ab-ee1564dde2ad',
-    title: 'Shape Explorer Safari',
+    title: 'В Поисках Фигур',
     description:
-      'Children embark on a safari adventure to find hidden shapes in the wild. They identify circles, squares, triangles in animals, plants, and landscapes while learning geometry basics.',
+      'Дети отправляются в сафари-приключение, чтобы найти спрятанные фигуры в дикой природе. Они узнают круги, квадраты и треугольники в животных, растениях и пейзажах, изучая основы геометрии.',
   },
 ] as const satisfies SeedData<'idea'>
 
@@ -73,7 +73,10 @@ async function main() {
     IDEAS.map(({ id, title, description }) =>
       prisma.idea.upsert({
         where: { id },
-        update: {},
+        update: {
+          title,
+          description,
+        },
         create: {
           id,
           title,
