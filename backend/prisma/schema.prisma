@@ -9,30 +9,30 @@ generator client {
   output   = "../dist/generated/prisma"
 }
 
-// @TODO: make this generator work with imports
-generator zod {
-  provider = "zod-prisma"
-  output   = "../../docs/generated/zod" // (default) the directory where generated zod schemas will be saved
+// // @TODO: make this generator work with imports
+// generator zod {
+//   provider = "zod-prisma"
+//   output   = "../../docs/generated/zod" // (default) the directory where generated zod schemas will be saved
 
-  // TODO: make this work .refine(imports.isURL)
-  // imports  = "../zod-schemas"
+//   // TODO: make this work .refine(imports.isURL)
+//   // imports  = "../zod-schemas"
 
-  relationModel = true // (default) Create and export both plain and related models.
-  // relationModel         = "default" // Do not export model without relations.
-  // relationModel         = false // Do not generate related model
+//   relationModel = true // (default) Create and export both plain and related models.
+//   // relationModel         = "default" // Do not export model without relations.
+//   // relationModel         = false // Do not generate related model
 
-  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
-  // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
+//   modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+//   // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
 
-  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+//   modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
 
-  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
-  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+//   // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+//   useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
 
-  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
-  // prismaJsonNullability = false // allows null assignment to optional JSON fields
-}
+//   // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+//   prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
+//   // prismaJsonNullability = false // allows null assignment to optional JSON fields
+// }
 
 datasource db {
   provider = "postgresql"
@@ -54,7 +54,7 @@ model Idea {
 
   /// idea title
   /// @zod.trim().min(1, { message: "Название должно быть больше 1-го символа" }).max(256, { message: "Название должно быть меньше 256-и символов" })
-  title String @unique
+  title String
 
   /// idea description
   /// @zod.trim().min(1, { message: "Описание должно быть больше 1-го символа" }).max(1024, { message: "Описание должно быть меньше 1024-х символов" })
@@ -105,13 +105,12 @@ model Vote {
   value Int
 
   /// vote userIp
-  userIp String
+  userIp String @unique
   user   User   @relation(fields: [userIp], references: [ip])
 
   /// vote ideaIp
   ideaId String
   idea   Idea   @relation(fields: [ideaId], references: [id])
 
-  @@unique([userIp, ideaId], name: "unique_user_idea_vote")
   @@map("votes")
 }

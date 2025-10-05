@@ -11,7 +11,11 @@
     "format": "pnpm dlx @biomejs/biome format --write",
     "prisma:migrate": "pnpm dlx prisma migrate dev",
     "prisma:studio": "pnpm dlx prisma studio",
-    "prisma:generate": "pnpm dlx prisma generate"
+    "prisma:generate": "pnpm dlx prisma generate",
+    "prisma:seed": "pnpm dlx prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./src/prisma-seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +45,7 @@
     "@types/node": "^24.5.2",
     "concurrently": "^9.2.1",
     "json-schema-to-ts": "^3.1.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "zod-prisma": "^0.5.4"
   }

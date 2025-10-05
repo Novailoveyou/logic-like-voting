@@ -10,6 +10,8 @@ const ideaController: FastifyPluginCallback = (app, options, done) => {
         votes: {
           select: {
             id: true,
+            value: true,
+            userIp: true,
           },
         },
       },

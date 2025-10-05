@@ -4,21 +4,23 @@ import { PrismaClient } from '../../dist/generated/prisma/client.js'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 declare module 'fastify' {
-	interface FastifyInstance {
-		prisma: PrismaClient
-	}
+  interface FastifyInstance {
+    prisma: PrismaClient
+  }
 }
 
+export const initPrisma = () => new PrismaClient().$extends(withAccelerate())
+
 const prismaPlugin: FastifyPluginAsync = fp(async (server, options) => {
-	const prisma = new PrismaClient().$extends(withAccelerate())
+  const prisma = initPrisma()
 
-	await prisma.$connect()
+  await prisma.$connect()
 
-	server.decorate('prisma', prisma as unknown as any)
+  server.decorate('prisma', prisma as unknown as any)
 
-	server.addHook('onClose', async (server) => {
-		await server.prisma.$disconnect()
-	})
+  server.addHook('onClose', async server => {
+    await server.prisma.$disconnect()
+  })
 })
 
 export default prismaPlugin

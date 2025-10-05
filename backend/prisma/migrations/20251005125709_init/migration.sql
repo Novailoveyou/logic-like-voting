@@ -35,9 +35,6 @@ CREATE TABLE "votes" (
 CREATE UNIQUE INDEX "ideas_id_key" ON "ideas"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ideas_title_key" ON "ideas"("title");
-
--- CreateIndex
 CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
 
 -- CreateIndex
@@ -45,9 +42,6 @@ CREATE UNIQUE INDEX "users_ip_key" ON "users"("ip");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "votes_id_key" ON "votes"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "votes_userIp_ideaId_key" ON "votes"("userIp", "ideaId");
 
 -- AddForeignKey
 ALTER TABLE "votes" ADD CONSTRAINT "votes_userIp_fkey" FOREIGN KEY ("userIp") REFERENCES "users"("ip") ON DELETE RESTRICT ON UPDATE CASCADE;

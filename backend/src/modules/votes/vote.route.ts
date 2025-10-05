@@ -61,10 +61,7 @@ const voteController: FastifyPluginCallback = (app, options, done) => {
       const vote = await app.prisma.vote.findUnique({
         select,
         where: {
-          unique_user_idea_vote: {
-            userIp: user.ip,
-            ideaId,
-          },
+          userIp: user.ip,
         },
       })
 
