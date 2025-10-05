@@ -1,5 +1,5 @@
+import type { Vote } from '../idea/model'
 import { useUser } from './hooks'
-import type { Vote } from '../vote/model'
 
 export const MyVotes = ({ votes }: { votes: Vote[] }) => {
   const { user, userIsLoading, userError } = useUser()
@@ -10,9 +10,12 @@ export const MyVotes = ({ votes }: { votes: Vote[] }) => {
 
   if (!user?.ip) return <span>Не определено</span>
 
-  return votes.filter(vote => vote.userIp === user.ip).length
+  return votes.reduce(
+    (total, vote) => (vote.userIp === user.ip ? total + vote.value : total),
+    0,
+  )
 }
 
 export const Votes = ({ votes }: { votes: Vote[] }) => {
-  return votes.length
+  return votes.reduce((total, vote) => total + vote.value, 0)
 }

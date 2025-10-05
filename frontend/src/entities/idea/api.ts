@@ -8,6 +8,14 @@ export const ideasFetcher = async (key: `/${typeof IDEA_KEY}`) => {
   return response.data
 }
 
+export const voteIdeaFether = async (
+  key: `/${typeof IDEA_KEY}/${Idea['id']}/vote`,
+) => {
+  const response = await api.post<Idea>(key)
+
+  return response.data
+}
+
 // export const createRoundFetcher = async (key: string) => {
 //   const response = await api.post<IdeaStore['round']['rounds'][number]>(
 //     key,

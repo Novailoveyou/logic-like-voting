@@ -105,7 +105,7 @@ model Vote {
   value Int
 
   /// vote userIp
-  userIp String @unique
+  userIp String
   user   User   @relation(fields: [userIp], references: [ip])
 
   /// vote ideaIp

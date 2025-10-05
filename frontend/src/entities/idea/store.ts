@@ -3,23 +3,15 @@ import type { IdeaStore } from './model'
 
 export const ideaSlice = createSlice<IdeaStore>(set => ({
   ideaSlice: {
-    ideas: null,
+    ideas: [],
     setIdeas: ideas =>
       set(state => {
-        if (!state.ideaSlice.ideas && ideas.length > 0)
-          state.ideaSlice.ideas = {}
-
-        if (state.ideaSlice.ideas)
-          ideas.forEach(idea => {
-            state.ideaSlice.ideas![idea.id] = idea
-          })
+        state.ideaSlice.ideas = ideas
       }),
-    vote: (ideaId, userIp) =>
+    castVote: idea =>
       set(state => {
-        if (!state.ideaSlice.ideas) return
-
-        state.ideaSlice.ideas[ideaId].votes.forEach(vote => {
-          if (vote.userIp === userIp) vote.value++
+        state.ideaSlice.ideas.forEach((ideaItem, idx) => {
+          if (ideaItem.id === idea.id) state.ideaSlice.ideas[idx] = idea
         })
       }),
   },

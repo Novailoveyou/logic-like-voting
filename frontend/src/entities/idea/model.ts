@@ -1,5 +1,8 @@
-import type { User } from '../user/model'
-import type { Vote } from '../vote/model'
+export type Vote = {
+  id: string
+  value: number
+  userIp: string
+}
 
 export type Idea = {
   id: string
@@ -10,8 +13,8 @@ export type Idea = {
 
 export type IdeaStore = {
   ideaSlice: {
-    ideas: Record<Idea['id'], Idea> | null
+    ideas: Idea[]
     setIdeas: (ideas: Idea[]) => void
-    vote: (ideaId: Idea['id'], userIp: User['ip']) => void
+    castVote: (idea: Idea) => void
   }
 }

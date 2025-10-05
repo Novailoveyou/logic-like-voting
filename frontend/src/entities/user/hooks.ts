@@ -3,7 +3,7 @@
 // import useSWRMutation from 'swr/mutation'
 import useSWR from 'swr'
 import { userFetcher } from './api'
-import { USERS_KEY } from './constants'
+import { USER_KEY } from './constants'
 import { useStore } from '@/app/store'
 
 export const useUser = () => {
@@ -15,7 +15,7 @@ export const useUser = () => {
     isLoading: userIsLoading,
     isValidating: userIsValidating,
     mutate: mutateUser,
-  } = useSWR(`/${USERS_KEY}/me`, userFetcher, {
+  } = useSWR(`/${USER_KEY}/me`, userFetcher, {
     onSuccess: setUser,
   })
 

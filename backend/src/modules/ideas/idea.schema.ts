@@ -1,16 +1,16 @@
 import type { FastifySchema } from 'fastify'
 
 /** @todo add responses schemas */
-const voteSchema = {
+const ideaSchema = {
   post: {
-    querystring: {
+    params: {
       type: 'object',
-      required: ['ideaId'],
+      required: ['id'],
       properties: {
-        ideaId: { type: 'string' },
+        id: { type: 'string' },
       },
     },
   },
 } as const satisfies Record<string, FastifySchema>
 
-export default voteSchema
+export default ideaSchema

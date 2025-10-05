@@ -1,4 +1,4 @@
-import { useIdeas } from './hooks'
+import { useIdeas, useVote } from './hooks'
 import type { Idea } from './model'
 import {
   Card,
@@ -8,13 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card'
-import { Button } from '@/shared/components/ui/button'
 import { P } from '@/shared/components/typography'
 import { LoaderIcon } from 'lucide-react'
 import { MyVotes, Votes } from '@/entities/user/ui'
+import { Button } from '@/shared/components/ui/button'
+import { useStore } from '@/app/store'
 
 export const Ideas = () => {
-  const { ideas, ideasAreLoading, ideasError } = useIdeas()
+  const { ideasAreLoading, ideasError } = useIdeas()
+  const ideas = useStore(state => state.ideaSlice.ideas)
 
   if (ideasAreLoading)
     return <LoaderIcon className='m-auto' aria-label='Загрузка...' />
@@ -22,7 +24,7 @@ export const Ideas = () => {
   if (ideasError)
     return <P>Ошибка загрузки идей. Попробуйте обновить страницу</P>
 
-  if (!ideas || ideas.length === 0)
+  if (ideas.length === 0)
     return <P>Идеи отсутствуют. Добавьте их с помощью seed скрипта</P>
 
   return (
@@ -34,7 +36,7 @@ export const Ideas = () => {
   )
 }
 
-function IdeaItem({ title, description, votes }: Idea) {
+function IdeaItem({ id, title, description, votes }: Idea) {
   return (
     <li>
       <Card>
@@ -49,11 +51,39 @@ function IdeaItem({ title, description, votes }: Idea) {
           <P>{description}</P>
         </CardContent>
         <CardFooter className='flex-col gap-2'>
-          <Button type='submit' className='w-full'>
-            Голосовать
-          </Button>
+          <CastVote ideaId={id} />
         </CardFooter>
       </Card>
     </li>
+  )
+}
+
+function CastVote({ ideaId }: { ideaId: Idea['id'] }) {
+  const { voteIsMutating, voteError, triggerCastVote } = useVote(ideaId)
+  const handleVote = () => triggerCastVote()
+
+  const isLimit =
+    voteError &&
+    typeof voteError === 'object' &&
+    'status' in voteError &&
+    typeof voteError.status === 'number' &&
+    voteError.status === 409
+
+  return (
+    <Button
+      type='submit'
+      className='w-full'
+      onClick={handleVote}
+      disabled={voteIsMutating || isLimit}
+      title={
+        voteIsMutating
+          ? 'Загрузка...'
+          : isLimit
+          ? 'Достигнут лимит голосов'
+          : ''
+      }>
+      {isLimit ? 'Достигнут лимит голосов' : 'Голосовать'}{' '}
+      {voteIsMutating && <LoaderIcon aria-label='Загрузка...' />}
+    </Button>
   )
 }

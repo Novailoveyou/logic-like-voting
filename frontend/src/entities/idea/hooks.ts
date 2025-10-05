@@ -2,9 +2,11 @@
 
 // import useSWRMutation from 'swr/mutation'
 import useSWR from 'swr'
-import { ideasFetcher } from './api'
+import useSWRMutation from 'swr/mutation'
+import { ideasFetcher, voteIdeaFether } from './api'
 import { IDEA_KEY } from './constants'
 import { useStore } from '@/app/store'
+import type { Idea } from './model'
 
 export const useIdeas = () => {
   const setIdeas = useStore(state => state.ideaSlice.setIdeas)
@@ -28,47 +30,28 @@ export const useIdeas = () => {
   }
 }
 
-// export const useCreateRound = () => {
-//   const addRound = useStore(state => state.round.addRound)
+export const useVote = (ideaId: Idea['id']) => {
+  const castVote = useStore(state => state.ideaSlice.castVote)
 
-//   const {
-//     data: round = null,
-//     error: roundError,
-//     isMutating: roundIsMutating,
-//     reset: resetRound,
-//     trigger: triggerRound,
-//   } = useSWRMutation(IDEA_KEY, createRoundFetcher, {
-//     onSuccess: addRound,
-//   })
+  const {
+    data: vote = null,
+    isMutating: voteIsMutating,
+    error: voteError,
+    reset: resetVote,
+    trigger: triggerCastVote,
+  } = useSWRMutation(
+    ideaId ? `/${IDEA_KEY}/${ideaId}/vote` : null,
+    voteIdeaFether,
+    {
+      onSuccess: castVote,
+    },
+  )
 
-//   return {
-//     round,
-//     roundError,
-//     roundIsMutating,
-//     resetRound,
-//     triggerRound,
-//   }
-// }
-
-// export const useRound = (id?: string) => {
-//   const setRound = useStore(state => state.round.setRound)
-
-//   const {
-//     data: round = null,
-//     error: roundError,
-//     isLoading: roundIsLoading,
-//     isValidating: roundIsValidating,
-//     mutate: mutateRound,
-//   } = useSWR(id ? `${IDEA_KEY}/${id}` : null, roundFetcher, {
-//     onSuccess: setRound,
-//     refreshInterval: 10000,
-//   })
-
-//   return {
-//     round,
-//     roundError,
-//     roundIsLoading,
-//     roundIsValidating,
-//     mutateRound,
-//   }
-// }
+  return {
+    vote,
+    voteIsMutating,
+    voteError,
+    resetVote,
+    triggerCastVote,
+  }
+}
