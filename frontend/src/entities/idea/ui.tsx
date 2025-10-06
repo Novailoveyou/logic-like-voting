@@ -1,4 +1,4 @@
-import { useIdeas, useVote } from './hooks'
+import { useCastVote, useIdeas } from './hooks'
 import type { Idea } from './model'
 import {
   Card,
@@ -10,48 +10,75 @@ import {
 } from '@/shared/components/ui/card'
 import { P } from '@/shared/components/typography'
 import { LoaderIcon } from 'lucide-react'
-import { MyVotes, Votes } from '@/entities/user/ui'
-import { Button } from '@/shared/components/ui/button'
 import { useStore } from '@/app/store'
+import { Button } from '@/shared/components/ui/button'
+import { Skeleton } from '@/shared/components/ui/skeleton'
+import { LOADING_IDEA_SKELETONS } from './constants'
 
 export const Ideas = () => {
-  const { ideasAreLoading, ideasError } = useIdeas()
+  const { areIdeasAreLoading, ideasError } = useIdeas()
   const ideas = useStore(state => state.ideaSlice.ideas)
-
-  if (ideasAreLoading)
-    return <LoaderIcon className='m-auto' aria-label='Загрузка...' />
 
   if (ideasError)
     return <P>Ошибка загрузки идей. Попробуйте обновить страницу</P>
 
-  if (ideas.length === 0)
+  if (ideas.length === 0 && !areIdeasAreLoading)
     return <P>Идеи отсутствуют. Добавьте их с помощью seed скрипта</P>
 
   return (
     <ul className='flex flex-col flex-wrap gap-4'>
-      {ideas.map(idea => (
-        <IdeaItem key={idea.id} {...idea} />
+      {(areIdeasAreLoading ? LOADING_IDEA_SKELETONS : ideas).map(idea => (
+        <IdeaItem key={idea.id} {...idea} isLoading={areIdeasAreLoading} />
       ))}
     </ul>
   )
 }
 
-function IdeaItem({ id, title, description, votes }: Idea) {
+function IdeaItem({
+  id,
+  title,
+  description,
+  totalVotes,
+  myVotes,
+  isLimit,
+  isLoading,
+}: Idea & { isLoading?: boolean }) {
   return (
-    <li>
+    <li
+      aria-label={isLoading ? 'Загрузка...' : ''}
+      title={isLoading ? 'Загрузка...' : ''}>
       <Card>
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>
+            {isLoading ? <Skeleton className='w-full h-4' /> : title}
+          </CardTitle>
           <CardDescription>
-            Голосов: всего - <Votes votes={votes} />, моих -{' '}
-            <MyVotes votes={votes} />
+            Голосов: всего -{' '}
+            {isLoading ? <Skeleton className='w-4 h-3.5' /> : totalVotes}, моих
+            - {isLoading ? <Skeleton className='w-4 h-3.5' /> : myVotes}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <P>{description}</P>
+          <P>
+            {isLoading ? (
+              <>
+                <Skeleton className='w-full h-4' />
+                <Skeleton className='w-full h-4' />
+                <Skeleton className='w-full h-4' />
+              </>
+            ) : (
+              description
+            )}
+          </P>
         </CardContent>
         <CardFooter className='flex-col gap-2'>
-          <CastVote ideaId={id} />
+          {isLoading ? (
+            <Skeleton className='w-full h-6' />
+          ) : isLimit ? (
+            <P>Вы уже достигли лимита голосов за эту идею</P>
+          ) : (
+            <CastVote ideaId={id} />
+          )}
         </CardFooter>
       </Card>
     </li>
@@ -59,31 +86,25 @@ function IdeaItem({ id, title, description, votes }: Idea) {
 }
 
 function CastVote({ ideaId }: { ideaId: Idea['id'] }) {
-  const { voteIsMutating, voteError, triggerCastVote } = useVote(ideaId)
-  const handleVote = () => triggerCastVote()
+  const { isCastVoteMutating, triggerCastVote } = useCastVote(ideaId)
 
-  const isLimit =
-    voteError &&
-    typeof voteError === 'object' &&
-    'status' in voteError &&
-    typeof voteError.status === 'number' &&
-    voteError.status === 409
+  const handleVote = () =>
+    triggerCastVote(null, {
+      optimisticData: vote => ({
+        value: (vote?.value || 0) + 1,
+        isLimit: vote?.isLimit || false,
+      }),
+    })
 
   return (
     <Button
       type='submit'
       className='w-full'
       onClick={handleVote}
-      disabled={voteIsMutating || isLimit}
-      title={
-        voteIsMutating
-          ? 'Загрузка...'
-          : isLimit
-          ? 'Достигнут лимит голосов'
-          : ''
-      }>
-      {isLimit ? 'Достигнут лимит голосов' : 'Голосовать'}{' '}
-      {voteIsMutating && <LoaderIcon aria-label='Загрузка...' />}
+      disabled={isCastVoteMutating}
+      title={isCastVoteMutating ? 'Загрузка...' : ''}>
+      Голосовать
+      {isCastVoteMutating && <LoaderIcon aria-label='Загрузка...' />}
     </Button>
   )
 }

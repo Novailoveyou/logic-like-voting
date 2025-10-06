@@ -8,11 +8,21 @@ export const ideaSlice = createSlice<IdeaStore>(set => ({
       set(state => {
         state.ideaSlice.ideas = ideas
       }),
-    castVote: idea =>
+    /** @remarks We intentionally don't sort ideas here based on `totalVotes` since we avoid layout shift leading to better UX */
+    castVote: (ideaId, vote) =>
       set(state => {
-        state.ideaSlice.ideas.forEach((ideaItem, idx) => {
-          if (ideaItem.id === idea.id) state.ideaSlice.ideas[idx] = idea
-        })
+        const ideaIndex = state.ideaSlice.ideas.findIndex(
+          idea => idea.id === ideaId,
+        )
+
+        if (ideaIndex === -1) return
+
+        state.ideaSlice.ideas[ideaIndex].totalVotes +=
+          vote.myVotes - state.ideaSlice.ideas[ideaIndex].myVotes
+
+        state.ideaSlice.ideas[ideaIndex].myVotes = vote.myVotes
+
+        state.ideaSlice.ideas[ideaIndex].isLimit = vote.isLimit
       }),
   },
 }))

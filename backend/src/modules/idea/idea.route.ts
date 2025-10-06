@@ -1,5 +1,7 @@
 import type { FastifyPluginCallback } from 'fastify'
 import { checkIsLimit } from '../../utils.js'
+import ideaSchema from './idea.schema.js'
+import type { FromSchema } from 'json-schema-to-ts'
 
 const ideaController: FastifyPluginCallback = (app, options, done) => {
   /** @description Get all ideas */
@@ -44,6 +46,58 @@ const ideaController: FastifyPluginCallback = (app, options, done) => {
 
     return reply.code(200).send(sortedIdeas)
   })
+
+  /** @description Cast vote for the idea */
+  app.patch<{ Params: FromSchema<typeof ideaSchema.params> }>(
+    '/:id/vote',
+    {
+      schema: ideaSchema,
+    },
+    async (request, reply) => {
+      const ideaId = request.params.id
+      const ip = request.ip
+
+      const vote = await app.prisma.vote.findUnique({
+        where: {
+          id: {
+            ideaId,
+            ip,
+          },
+        },
+      })
+
+      if (typeof vote?.value === 'number' && checkIsLimit(vote.value))
+        return reply.code(409).send({
+          error: 'Превышен лимит голосов',
+        })
+
+      const newVote = await app.prisma.vote.upsert({
+        where: {
+          id: {
+            ideaId,
+            ip,
+          },
+        },
+        create: {
+          ip,
+          ideaId,
+          value: 1,
+        },
+        update: {
+          value: {
+            increment: 1,
+          },
+        },
+        select: {
+          value: true,
+        },
+      })
+
+      return reply
+        .code(200)
+        .send({ value: newVote.value, isLimit: checkIsLimit(newVote.value) })
+    },
+  )
 
   done()
 }

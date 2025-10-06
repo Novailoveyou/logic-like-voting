@@ -7,7 +7,7 @@ import type { VariantProps } from 'class-variance-authority'
 export const containerVariants = cva('', {
   variants: {
     variant: {
-      default: 'relative z-20 w-full px-5 max-w-[90rem] mx-auto',
+      default: 'relative z-20 w-full px-5 max-w-[35rem] mx-auto',
     },
   },
   defaultVariants: {

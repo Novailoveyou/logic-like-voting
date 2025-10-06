@@ -1,8 +1,7 @@
 import type { StateCreator } from 'zustand/vanilla'
 import type { IdeaStore } from '@/entities/idea/model'
-import type { UserStore } from '@/entities/user/model'
 
-export type Store = IdeaStore & UserStore
+export type Store = IdeaStore
 
 type ZustandMiddleware = [['zustand/devtools', never], ['zustand/immer', never]]
 

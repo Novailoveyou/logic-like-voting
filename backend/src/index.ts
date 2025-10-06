@@ -3,7 +3,6 @@ import fastifyCors from '@fastify/cors'
 import envPlugin from './plugins/env.js'
 import prismaPlugin from './plugins/prisma.js'
 import ideaController from './modules/idea/idea.route.js'
-import voteController from './modules/vote/vote.route.js'
 
 const app = fastify({
   logger: true,
@@ -23,8 +22,6 @@ app.get('/', async (request, reply) => {
 })
 
 app.register(ideaController, { prefix: '/ideas' })
-
-app.register(voteController, { prefix: '/votes' })
 
 await app.listen(
   { host: app.getTypedEnvs().HOST, port: app.getTypedEnvs().PORT },

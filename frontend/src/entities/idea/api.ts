@@ -8,34 +8,13 @@ export const ideasFetcher = async (key: `/${typeof IDEA_KEY}`) => {
   return response.data
 }
 
-export const voteIdeaFether = async (
+export const castVoteFetcher = async (
   key: `/${typeof IDEA_KEY}/${Idea['id']}/vote`,
 ) => {
-  const response = await api.post<Idea>(key)
+  const response = await api.patch<{
+    value: Idea['myVotes']
+    isLimit: Idea['isLimit']
+  }>(key)
 
   return response.data
 }
-
-// export const createRoundFetcher = async (key: string) => {
-//   const response = await api.post<IdeaStore['round']['rounds'][number]>(
-//     key,
-//     undefined,
-//     {
-//       headers: {
-//         Authorization: `Bearer ${getCookie('token')}`,
-//       },
-//     },
-//   )
-
-//   return response.data
-// }
-
-// export const roundFetcher = async (key: string) => {
-//   const response = await api.get<IdeaStore['round']['round']>(key, {
-//     headers: {
-//       Authorization: `Bearer ${getCookie('token')}`,
-//     },
-//   })
-
-//   return response.data
-// }

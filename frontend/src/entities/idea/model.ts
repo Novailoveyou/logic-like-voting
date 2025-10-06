@@ -1,20 +1,19 @@
-export type Vote = {
-  id: string
-  value: number
-  userIp: string
-}
-
 export type Idea = {
   id: string
   title: string
   description: string
-  votes: Vote[]
+  totalVotes: number
+  myVotes: number
+  isLimit: boolean
 }
 
 export type IdeaStore = {
   ideaSlice: {
     ideas: Idea[]
-    setIdeas: (ideas: Idea[]) => void
-    castVote: (idea: Idea) => void
+    setIdeas: (ideas: IdeaStore['ideaSlice']['ideas']) => void
+    castVote: (
+      ideaId: Idea['id'],
+      vote: Pick<Idea, 'myVotes' | 'isLimit'>,
+    ) => void
   }
 }

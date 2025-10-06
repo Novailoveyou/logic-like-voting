@@ -1,14 +1,14 @@
 import type { FastifySchema } from 'fastify'
 
 /** @todo add responses schemas */
-const voteSchema = {
+const ideaSchema = {
   params: {
     type: 'object',
-    required: ['ideaId'],
+    required: ['id'],
     properties: {
-      ideaId: { type: 'string' },
+      id: { type: 'string' },
     },
   },
 } as const satisfies FastifySchema
 
-export default voteSchema
+export default ideaSchema
