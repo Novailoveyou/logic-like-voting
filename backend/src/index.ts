@@ -12,7 +12,7 @@ const app = fastify({
 
 await app.register(envPlugin)
 
-// @ts-expect-error todo: make types of it work
+// @ts-expect-error it works as expected but this package typed poorly - @TODO: fix the types
 app.register(fastifyIp, {
   strict: false,
   isAWS: false,
