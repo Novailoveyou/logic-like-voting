@@ -56,17 +56,30 @@ function IdeaItem({
       title={isLoading ? 'Загрузка...' : ''}>
       <Card>
         <CardHeader>
-          <CardTitle className={cn(isValidating && 'text-muted')}>
+          <CardTitle>
             {isLoading ? <Skeleton className='w-full h-4' /> : title}
           </CardTitle>
-          <CardDescription className={cn(isValidating && 'text-muted')}>
+          <CardDescription>
             Голосов: всего -{' '}
-            {isLoading ? <Skeleton className='w-4 h-3.5' /> : totalVotes}, моих
-            - {isLoading ? <Skeleton className='w-4 h-3.5' /> : myVotes}
+            {isLoading ? (
+              <Skeleton className='w-4 h-3.5' />
+            ) : (
+              <span className={cn(isValidating && 'text-muted')}>
+                {totalVotes}
+              </span>
+            )}
+            , моих -{' '}
+            {isLoading ? (
+              <Skeleton className='w-4 h-3.5' />
+            ) : (
+              <span className={cn(isValidating && 'text-muted')}>
+                {myVotes}
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <P className={cn(isValidating && 'text-muted')}>
+          <P>
             {isLoading ? (
               <>
                 <Skeleton className='w-full h-4' />
@@ -78,13 +91,12 @@ function IdeaItem({
             )}
           </P>
         </CardContent>
-        <CardFooter className='flex-col gap-2'>
+        <CardFooter
+          className={cn('flex-col gap-2', isValidating && 'text-muted')}>
           {isLoading || isValidating ? (
             <Skeleton className='w-full h-6' />
           ) : isLimit ? (
-            <P className={cn(isValidating && 'text-muted')}>
-              Вы уже достигли лимита голосов за эту идею
-            </P>
+            <P>Вы уже достигли лимита голосов за эту идею</P>
           ) : (
             <CastVote ideaId={id} />
           )}
