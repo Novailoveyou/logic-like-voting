@@ -6,17 +6,6 @@ type SeedData<
   Entity extends Extract<keyof typeof prisma, 'user' | 'idea' | 'vote'>,
 > = Parameters<(typeof prisma)[Entity]['upsert']>['0']['create'][]
 
-const USERS = [
-  {
-    id: 'b553daa7-c8cd-4879-ad75-7bff1644041b',
-    ip: '0.0.0.0',
-  },
-  {
-    id: '48741cef-b084-4563-b8aa-e2892bb9315c',
-    ip: '0.0.0.1',
-  },
-] as const satisfies SeedData<'user'>
-
 const IDEAS = [
   {
     id: '6aa8871d-6665-4e13-98db-efcecf78d28e',
@@ -40,35 +29,18 @@ const IDEAS = [
 
 const VOTES = [
   {
-    id: 'a117aba9-64e4-47f4-992f-9bcc2e124ff8',
-    value: 2,
+    ip: '0.0.0.1',
     ideaId: IDEAS[0].id,
-    userIp: USERS[0].ip,
+    value: 2,
   },
   {
-    id: 'abd15a78-ec2e-4382-a7e7-8f9e1a94f2af',
-    value: 1,
+    ip: '0.0.0.2',
     ideaId: IDEAS[0].id,
-    userIp: USERS[1].ip,
+    value: 1,
   },
 ] as const satisfies SeedData<'vote'>
 
 async function main() {
-  await Promise.all(
-    USERS.map(({ id, ip }) =>
-      prisma.user.upsert({
-        where: {
-          id,
-        },
-        update: {},
-        create: {
-          id,
-          ip,
-        },
-      }),
-    ),
-  )
-
   await Promise.all(
     IDEAS.map(({ id, title, description }) =>
       prisma.idea.upsert({
@@ -87,15 +59,19 @@ async function main() {
   )
 
   await Promise.all(
-    VOTES.map(({ id, ideaId, userIp, value }) =>
+    VOTES.map(({ ideaId, ip, value }) =>
       prisma.vote.upsert({
         where: {
-          id,
+          id: {
+            ideaId,
+            ip,
+          },
         },
-        update: {},
+        update: {
+          value,
+        },
         create: {
-          id,
-          userIp,
+          ip,
           ideaId,
           value,
         },
