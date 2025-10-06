@@ -1,12 +1,12 @@
 import type { FastifyPluginCallback } from 'fastify'
-import { checkIsLimit } from '../../utils.js'
+import { checkIsLimit, getClientIP } from '../../utils.js'
 import ideaSchema from './idea.schema.js'
 import type { FromSchema } from 'json-schema-to-ts'
 
 const ideaController: FastifyPluginCallback = (app, options, done) => {
   /** @description Get all ideas */
   app.get('/', async (request, reply) => {
-    const ip = request.ips?.[0] || request.ip
+    const ip = getClientIP(request)
 
     const ideas = await app.prisma.idea.findMany({
       select: {
@@ -55,7 +55,7 @@ const ideaController: FastifyPluginCallback = (app, options, done) => {
     },
     async (request, reply) => {
       const ideaId = request.params.id
-      const ip = request.ips?.[0] || request.ip
+      const ip = getClientIP(request)
 
       const vote = await app.prisma.vote.findUnique({
         where: {
