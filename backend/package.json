@@ -13,7 +13,8 @@
     "prisma:studio": "pnpm dlx prisma studio",
     "prisma:generate": "pnpm dlx prisma generate",
     "prisma:seed": "pnpm dlx prisma db seed",
-    "prisma:reset": "pnpm dlx prisma migrate reset"
+    "prisma:reset": "pnpm dlx prisma migrate reset",
+    "init": "pnpm i && pnpm run prisma:generate && pnpm run build && pnpn run prisma:seed"
   },
   "prisma": {
     "seed": "node ./dist/prisma-seed.js"

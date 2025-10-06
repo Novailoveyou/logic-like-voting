@@ -11,12 +11,16 @@ application.
 
 ## Setup
 
-1. Install dependencies:
+1. Configure environment variables as needed (see `.env.example`).
+
+2. Run `init` script:
+
    ```zsh
-   pnpm i
+   pnpm run init
    ```
-2. Configure environment variables as needed (see `.env.example`).
+
 3. Start the frontend server:
+
    ```zsh
    pnpm run dev
    ```

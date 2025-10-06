@@ -10,24 +10,16 @@ management. It provides the core API and business logic for the application.
 
 ## Setup
 
-1. Install dependencies:
+1. Configure environment variables as needed (see `.env.example`).
+
+2. Run `init` script:
+
    ```zsh
-   pnpm i
+   pnpm run init
    ```
-2. Configure environment variables as needed (see `.env.example`).
-3. Generate prisma schema:
-   ```zsh
-   pnpm run prisma:generate
-   ```
-4. Build dist files
-   ```zsh
-   pnpm run build
-   ```
-5. Seed DB
-   ```zsh
-   pnpm run prisma:seed
-   ```
-6. Start the backend server:
+
+3. Start the backend server:
+
    ```zsh
    pnpm run dev
    ```

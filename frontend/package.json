@@ -12,7 +12,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "init": "pnpm i"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
