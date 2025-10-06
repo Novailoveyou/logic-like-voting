@@ -16,7 +16,7 @@
     "prisma:reset": "pnpm dlx prisma migrate reset"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./src/prisma-seed.ts"
+    "seed": "ts-node ./src/prisma-seed.ts"
   },
   "keywords": [],
   "author": "",

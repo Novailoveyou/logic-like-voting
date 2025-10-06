@@ -1,4 +1,4 @@
-import { initPrisma } from './plugins/prisma.js'
+import { initPrisma } from '../dist/plugins/prisma.js'
 
 const prisma = initPrisma()
 
