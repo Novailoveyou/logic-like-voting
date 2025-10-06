@@ -11,14 +11,14 @@ declare module 'fastify' {
 
 export const initPrisma = () => new PrismaClient().$extends(withAccelerate())
 
-const prismaPlugin: FastifyPluginAsync = fp(async (server, options) => {
+const prismaPlugin: FastifyPluginAsync = fp(async (app, options) => {
   const prisma = initPrisma()
 
   await prisma.$connect()
 
-  server.decorate('prisma', prisma as unknown as any)
+  app.decorate('prisma', prisma as unknown as any)
 
-  server.addHook('onClose', async server => {
+  app.addHook('onClose', async server => {
     await server.prisma.$disconnect()
   })
 })

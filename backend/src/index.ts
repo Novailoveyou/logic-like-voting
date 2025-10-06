@@ -1,7 +1,7 @@
 import fastify from 'fastify'
 import fastifyCors from '@fastify/cors'
-import fastifyIp from 'fastify-ip'
 import envPlugin from './plugins/env.js'
+import ipPlugin from './plugins/ip.js'
 import prismaPlugin from './plugins/prisma.js'
 import ideaController from './modules/idea/idea.route.js'
 
@@ -12,11 +12,7 @@ const app = fastify({
 
 await app.register(envPlugin)
 
-// @ts-expect-error it works as expected but this package typed poorly - @TODO: fix the types
-app.register(fastifyIp, {
-  strict: false,
-  isAWS: false,
-})
+app.register(ipPlugin)
 
 app.register(fastifyCors, {
   origin: '*',
