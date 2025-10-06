@@ -97,7 +97,7 @@ function IdeaItem({
           ) : isLimit ? (
             <P>Вы уже достигли лимита голосов за эту идею</P>
           ) : (
-            <CastVote ideaId={id} isValidating={isValidating} />
+            <VoteButton ideaId={id} isValidating={isValidating} />
           )}
         </CardFooter>
       </Card>
@@ -105,7 +105,7 @@ function IdeaItem({
   )
 }
 
-function CastVote({
+function VoteButton({
   ideaId,
   isValidating,
 }: {
