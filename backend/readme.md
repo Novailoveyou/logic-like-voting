@@ -10,7 +10,7 @@ management. It provides the core API and business logic for the application.
 
 ## Setup
 
-1. Configure environment variables as needed (see `.env.example`).
+1. Configure environment variables as needed (see `.env.example`)
 
 2. Run `init` script:
 
