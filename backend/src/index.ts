@@ -14,7 +14,6 @@ await app.register(envPlugin)
 
 // @ts-expect-error todo: make types of it work
 app.register(fastifyIp, {
-  order: ['x-my-ip-header'],
   strict: false,
   isAWS: false,
 })
