@@ -91,8 +91,7 @@ function IdeaItem({
             )}
           </P>
         </CardContent>
-        <CardFooter
-          className={cn('flex-col gap-2', isValidating && 'text-muted')}>
+        <CardFooter className={'flex-col gap-2'}>
           {isLoading ? (
             <Skeleton className='w-full h-6' />
           ) : isLimit ? (
