@@ -6,6 +6,7 @@ import ideaController from './modules/idea/idea.route.js'
 
 const app = fastify({
   logger: true,
+  trustProxy: true,
 })
 
 await app.register(envPlugin)
