@@ -14,9 +14,10 @@ import { useStore } from '@/app/store'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { LOADING_IDEA_SKELETONS } from './constants'
+import { cn } from '@/shared/lib/utils'
 
 export const Ideas = () => {
-  const { areIdeasAreLoading, ideasError } = useIdeas()
+  const { areIdeasAreLoading, areIdeasValidating, ideasError } = useIdeas()
   const ideas = useStore(state => state.ideaSlice.ideas)
 
   if (ideasError)
@@ -28,7 +29,12 @@ export const Ideas = () => {
   return (
     <ul className='flex flex-col flex-wrap gap-4'>
       {(areIdeasAreLoading ? LOADING_IDEA_SKELETONS : ideas).map(idea => (
-        <IdeaItem key={idea.id} {...idea} isLoading={areIdeasAreLoading} />
+        <IdeaItem
+          key={idea.id}
+          {...idea}
+          isLoading={areIdeasAreLoading}
+          isValidating={areIdeasValidating}
+        />
       ))}
     </ul>
   )
@@ -42,24 +48,25 @@ function IdeaItem({
   myVotes,
   isLimit,
   isLoading,
-}: Idea & { isLoading?: boolean }) {
+  isValidating,
+}: Idea & { isLoading?: boolean; isValidating?: boolean }) {
   return (
     <li
       aria-label={isLoading ? 'Загрузка...' : ''}
       title={isLoading ? 'Загрузка...' : ''}>
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className={cn(isValidating && 'text-muted')}>
             {isLoading ? <Skeleton className='w-full h-4' /> : title}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className={cn(isValidating && 'text-muted')}>
             Голосов: всего -{' '}
             {isLoading ? <Skeleton className='w-4 h-3.5' /> : totalVotes}, моих
             - {isLoading ? <Skeleton className='w-4 h-3.5' /> : myVotes}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <P>
+          <P className={cn(isValidating && 'text-muted')}>
             {isLoading ? (
               <>
                 <Skeleton className='w-full h-4' />
@@ -72,10 +79,12 @@ function IdeaItem({
           </P>
         </CardContent>
         <CardFooter className='flex-col gap-2'>
-          {isLoading ? (
+          {isLoading || isValidating ? (
             <Skeleton className='w-full h-6' />
           ) : isLimit ? (
-            <P>Вы уже достигли лимита голосов за эту идею</P>
+            <P className={cn(isValidating && 'text-muted')}>
+              Вы уже достигли лимита голосов за эту идею
+            </P>
           ) : (
             <CastVote ideaId={id} />
           )}
