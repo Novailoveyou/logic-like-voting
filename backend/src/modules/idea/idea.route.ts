@@ -24,7 +24,7 @@ const ideaController: FastifyPluginCallback = (app, options, done) => {
 
     if (!ideas) return reply.code(404).send({ error: 'Идеи не найдены' })
 
-    // TODO: optimize this
+    // TODO: optimize this @see https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting#sort-by-relevance-postgresql-and-mysql
     const sortedIdeas = ideas
       .map(({ votes, ...idea }) => {
         let totalVotes = 0
