@@ -93,12 +93,12 @@ function IdeaItem({
         </CardContent>
         <CardFooter
           className={cn('flex-col gap-2', isValidating && 'text-muted')}>
-          {isLoading || isValidating ? (
+          {isLoading ? (
             <Skeleton className='w-full h-6' />
           ) : isLimit ? (
             <P>Вы уже достигли лимита голосов за эту идею</P>
           ) : (
-            <CastVote ideaId={id} />
+            <CastVote ideaId={id} isValidating={isValidating} />
           )}
         </CardFooter>
       </Card>
@@ -106,7 +106,13 @@ function IdeaItem({
   )
 }
 
-function CastVote({ ideaId }: { ideaId: Idea['id'] }) {
+function CastVote({
+  ideaId,
+  isValidating,
+}: {
+  ideaId: Idea['id']
+  isValidating?: boolean
+}) {
   const { isCastVoteMutating, triggerCastVote } = useCastVote(ideaId)
 
   const handleVote = () =>
@@ -120,11 +126,11 @@ function CastVote({ ideaId }: { ideaId: Idea['id'] }) {
   return (
     <Button
       type='submit'
-      className='w-full'
+      className={cn('w-full', isValidating && 'text-muted bg-muted-foreground')}
       onClick={handleVote}
-      disabled={isCastVoteMutating}
-      title={isCastVoteMutating ? 'Загрузка...' : ''}>
-      Голосовать
+      disabled={isValidating || isCastVoteMutating}
+      title={isValidating || isCastVoteMutating ? 'Загрузка...' : ''}>
+      {isValidating ? 'Обновление данных...' : 'Голосовать'}
       {isCastVoteMutating && <LoaderIcon aria-label='Загрузка...' />}
     </Button>
   )
