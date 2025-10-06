@@ -72,7 +72,7 @@ function IdeaItem({
             {isLoading ? (
               <Skeleton className='w-4 h-3.5' />
             ) : (
-              <span className={cn(isValidating && 'text-muted')}>
+              <span className={cn(isValidating && !isLimit && 'text-muted')}>
                 {myVotes}
               </span>
             )}
