@@ -1,5 +1,6 @@
 import fastify from 'fastify'
 import fastifyCors from '@fastify/cors'
+import fastifyIp from 'fastify-ip'
 import envPlugin from './plugins/env.js'
 import prismaPlugin from './plugins/prisma.js'
 import ideaController from './modules/idea/idea.route.js'
@@ -10,6 +11,13 @@ const app = fastify({
 })
 
 await app.register(envPlugin)
+
+// @ts-expect-error todo: make types of it work
+app.register(fastifyIp, {
+  order: ['x-my-ip-header'],
+  strict: false,
+  isAWS: false,
+})
 
 app.register(fastifyCors, {
   origin: '*',
